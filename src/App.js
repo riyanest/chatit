@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import Input from './components/Input';
 import './App.css';
 
