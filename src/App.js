@@ -1,11 +1,11 @@
-import Input from './components/Input';
+
+import Chat from './components/Chat';
 import './App.css';
 
 function App() {
   return (
     <div className="App">
-          <Input  />
-
+      <Chat/>
     </div>
   );
 }
