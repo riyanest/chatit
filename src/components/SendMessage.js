@@ -2,10 +2,33 @@ import React, { useState } from 'react'
 import { db, auth } from '../firebase'
 import firebase from 'firebase'
 import { Input, Button } from '@material-ui/core'
-
+import Picker, { SKIN_TONE_MEDIUM_DARK } from 'emoji-picker-react';
 function SendMessage({ scroll }) {
     const [msg, setMsg] = useState('')
+const [pickerheight, setpickerheight]=useState(0)
+    // const [chosenEmoji, setChosenEmoji] = useState(null);
 
+    const onEmojiClick = (event, emojiObject) => {
+        // setChosenEmoji(emojiObject);
+        setMsg(msg+emojiObject.emoji)
+    };
+     const emojipicker=()=>{
+        var ph=pickerheight
+        ph=ph==0?320:0
+        setpickerheight(ph)
+        // document.getElementById("emojipicker").height=document.getElementById("emojipicker").height=0?320:0
+     }
+    const EmojiData = ({ chosenEmoji }) => (
+        <div>
+          <strong>Unified:</strong> {chosenEmoji.unified}
+          <br />
+          <strong>Names:</strong> {chosenEmoji.names.join(', ')}
+          <br />
+          <strong>Symbol:</strong> {chosenEmoji.emoji}
+          <br />
+          <strong>ActiveSkinTone:</strong> {chosenEmoji.activeSkinTone}
+        </div>
+      );
     async function sendMessage(e) {
         e.preventDefault()
         const { uid, photoURL } = auth.currentUser
@@ -17,7 +40,7 @@ function SendMessage({ scroll }) {
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         })
         setMsg('')
-        scroll.current.scrollIntoView({ behavior: 'smooth' })
+        scroll.current.scrollIntoView({ behavior: 'smooth' })   
     }
     return (
         <div>
@@ -25,6 +48,16 @@ function SendMessage({ scroll }) {
                 <div className="sendMsg">
 
                     <input className="input" placeholder="Type a message"  type="text" value={msg} onChange={e => setMsg(e.target.value)}  />
+<div                    id="emojipicker" style={{height:pickerheight}}  >
+<Picker
+                        onEmojiClick={onEmojiClick}
+                        disableAutoFocus={true}
+                        skinTone={SKIN_TONE_MEDIUM_DARK}
+                        groupNames={{ smileys_people: 'PEOPLE' }}
+                        native
+                    /></div>                    
+                    <button className="btn" type="button" onClick={emojipicker}>😁</button>
+      {/* {chosenEmoji && <EmojiData chosenEmoji={chosenEmoji} />} */}
                     <button type="submit" className="btn">   
                         <svg width="40px" height="40px" viewBox="0 0 64.000000 64.000000" preserveAspectRatio="xMidYMid meet">
                             <g transform="translate(0.000000,64.000000) scale(0.100000,-0.100000)" fill="#a9a9a9" stroke="none">

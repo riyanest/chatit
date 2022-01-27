@@ -24,6 +24,7 @@ body {
 	display: flex;
 	justify-content: flex-end;
 }
+
 .input-container {
 	display: flex;
 	align-items: center;
@@ -189,4 +190,12 @@ p {
 }
 .btn:active {
 	box-shadow: -3px -3px 7px #f5f5f5 inset, 3px 3px 7px #bbc3cc inset;
+}
+#emojipicker {
+	box-shadow: -3px -3px 7px #f5f5f5 inset, 3px 3px 7px #bbc3cc;
+	position: fixed;
+	bottom: 130px;
+	background-color: rgb(227, 231, 234);
+	overflow: hidden;
+	transition: 0.5s;
 }
