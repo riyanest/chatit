@@ -1,22 +1,23 @@
-import React, { useState } from 'react'
-import { db, auth } from '../firebase'
-import firebase from 'firebase'
-import { Input, Button } from '@material-ui/core'
+import React, { useState,useContext } from 'react'
+// import { db, auth } from '../firebase'
+// import firebase from 'firebase'
+import {io} from "socket.io-client"
+import MessageContext from "./context/context";
 import Picker, { SKIN_TONE_MEDIUM_DARK } from 'emoji-picker-react';
 function SendMessage({ scroll }) {
     const [msg, setMsg] = useState('')
-const [pickerheight, setpickerheight]=useState(0)
-    // const [chosenEmoji, setChosenEmoji] = useState(null);
+    const [pickerheight, setpickerheight]=useState(0)
+    const [messages,setMessages]=useState([])
+    const {chats,setChats}=useContext(MessageContext)
+    const socket = io("http://localhost:5000")
 
     const onEmojiClick = (event, emojiObject) => {
-        // setChosenEmoji(emojiObject);
         setMsg(msg+emojiObject.emoji)
     };
      const emojipicker=()=>{
         var ph=pickerheight
         ph=ph==0?320:0
         setpickerheight(ph)
-        // document.getElementById("emojipicker").height=document.getElementById("emojipicker").height=0?320:0
      }
     const EmojiData = ({ chosenEmoji }) => (
         <div>
@@ -29,17 +30,25 @@ const [pickerheight, setpickerheight]=useState(0)
           <strong>ActiveSkinTone:</strong> {chosenEmoji.activeSkinTone}
         </div>
       );
+
     async function sendMessage(e) {
         e.preventDefault()
-        const { uid, photoURL } = auth.currentUser
-
-        await db.collection('messages').add({
-            text: msg,
-            photoURL,
-            uid,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        socket.emit("sendMessage",msg)
+        socket.on("recieveMessage",async (msg)=>{
+          console.log(msg)
+          setChats([...chats,msg])
+          
         })
-        setMsg('')
+        setMsg("")
+        
+        // const { uid, photoURL } = auth.currentUser
+
+        // await db.collection('messages').add({
+        //     text: msg,
+        //     photoURL,
+        //     uid,
+        //     createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        // })
         scroll.current.scrollIntoView({ behavior: 'smooth' })   
     }
     return (
